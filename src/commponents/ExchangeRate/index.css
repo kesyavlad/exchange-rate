@@ -1,0 +1,9 @@
+.styleText{
+    font-family: Arial,sans-serif;
+    margin-left: 15px;
+    color: white;
+}
+.styleMoney{
+    display: flex;
+    justify-content: center;
+}
