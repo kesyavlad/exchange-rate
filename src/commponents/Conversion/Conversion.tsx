@@ -1,41 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import './index.css'
-import axios from "axios";
 import CurrencyInput from "../CurrentInput/CurrencyInput";
-
+import {getAll} from "../../api/endpoints";
 
 const Conversion = () => {
-    const [inputOne, setInputOne] = useState(0);
-    const [inputTwo, setInputTwo] = useState(0);
-    const [currency1, setCurrency] = useState('USD');
-    const [currency2, setCurrency2] = useState('UAH');
-    const [rates, setRates] = useState([])
-    const getRate =()=>{
-        axios.get(`https://api.fastforex.io/fetch-all?api_key=c38ca768bf-88d319401d-reymjw`).then(({data})=>{
+    const [inputOne, setInputOne] = useState<number>(0);
+    const [inputTwo, setInputTwo] = useState<number>(0);
+    const [currency1, setCurrency] = useState<string>('USD');
+    const [currency2, setCurrency2] = useState<string>('UAH');
+    const [rates, setRates] = useState<{ [key: string]: number }[]>([])
+    const getCurrens =()=> {
+        getAll().then(({data}) => {
             setRates(data.results)
         })
     }
-    useEffect(()=>{
-        getRate()
-    },[])
 
+    useEffect(()=>{
+        getCurrens()
+    },[])
     const format=(number:any)=>{
-            return number.toFixed(4)
+            return number.toFixed(2)
     }
     const changeInputOne = (inputOne:number) => {
-      setInputTwo(format(inputOne * rates[currency2 as unknown as number] /rates[currency1 as unknown as number]))
+      setInputTwo(format(inputOne * rates[currency2] /rates[currency1]))
         setInputOne(inputOne)
     }
-    const changeValue = (currency1:any) => {
-        setInputTwo(format(inputOne * rates[currency2 as unknown as number] /rates[currency1 as unknown as number]))
+    const changeValue = (currency1:string) => {
+        setInputTwo(format(inputOne * rates[currency2] / rates[currency1]))
         setCurrency(currency1)
     }
     const changeInputTwo = (inputTwo:number) => {
-        setInputOne(format(inputTwo * rates[currency1 as unknown as number] /rates[currency2 as unknown as number]))
+        setInputOne(format(inputTwo * rates[currency1] /rates[currency2]))
         setInputTwo(inputTwo)
     }
-    const changeValue2 = (currency2:any) => {
-        setInputOne(format(inputTwo * rates[currency1 as unknown as number] /rates[currency2 as unknown as number]))
+    const changeValue2 = (currency2:string) => {
+        setInputOne(format(inputTwo * rates[currency1] /rates[currency2]))
         setCurrency2(currency2)
     }
 

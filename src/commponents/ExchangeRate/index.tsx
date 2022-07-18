@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
+import {getOne} from '../../api/endpoints'
 import './index.css'
 
 const ExchangeRate = () => {
-    const [rate, setRate] = useState()
-    const [rate2, setRate2] = useState()
-    const getRate =()=>{
-        axios.get(`https://api.fastforex.io/fetch-one?from=EUR&to=UAH&api_key=c38ca768bf-88d319401d-reymjw`).then(({data})=>{
-            setRate(data.result.UAH)
+    const [rateEUR, setRateEUR] = useState<number>()
+    const [rateUSD, setRateUSD] = useState<number>()
+    const getRate = ()=>{
+        getOne('EUR').then(({data})=> {
+            setRateEUR(data.result.UAH)
         })
-        axios.get(`https://api.fastforex.io/fetch-one?from=USD&to=UAH&api_key=c38ca768bf-88d319401d-reymjw`).then(({data})=>{
-            setRate2(data.result.UAH)
+        getOne('USD').then(({data})=> {
+            setRateUSD(data.result.UAH)
         })
     }
+
     useEffect(()=>{
             getRate()
     },[])
@@ -20,8 +21,8 @@ const ExchangeRate = () => {
 
     return (
         <div className='styleMoney'>
-            <div className='styleText'>EUR: {rate}</div>
-            <div  className='styleText'>USD: {rate2}</div>
+            <div className='styleText'>EUR: {rateEUR}</div>
+            <div  className='styleText'>USD: {rateUSD}</div>
         </div>
     );
 };
